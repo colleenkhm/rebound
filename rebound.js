@@ -2,8 +2,11 @@ var ball;
 var paddle;
 var score;
 var playingArea;
-
-var aWidth;
+var gear;
+var controls;
+var newButton;
+var difficultySelect;
+var done;
 var aHeight;
 var pWidth;
 var pHeight;
@@ -15,6 +18,7 @@ var timer;
 var paddleLeft = 228;
 var ballLeft = 100;
 var ballTop = 8;
+var drag = false;
 
 window.addEventListener("load", init);
 window.addEventListener("resize", init);
@@ -25,8 +29,31 @@ function init() {
   paddle = document.getElementById("paddle");
   score = document.getElementById("score");
   playingArea = document.getElementById("playingArea");
+  gear = document.getElementById("gear");
+  controls = document.getElementById("controls");
+  newButton = document.getElementById("new");
+  difficultySelect = document.getElementById("difficulty");
+  done = document.getElementById("done");
   layoutPage();
   document.addEventListener("keydown", keyListener, false);
+
+  playingArea.addEventListener("mousedown", mouseDown, false);
+  playingArea.addEventListener("mousemove", mouseMove, false);
+  playingArea.addEventListener("mouseup", mouseUp, false);
+  playingArea.addEventListener("touchstart", mouseDown, false);
+  playingArea.addEventListener("touchmove", mouseMove, false);
+  playingArea.addEventListener("touchend", mouseUp, false);
+
+  gear.addEventListener("click", showSettings, false);
+  newButton.addEventListener("click", newGame, false);
+  done.addEventListener("click", hideSettings, false);
+  difficultySelect.addEventListener(
+    "change",
+    function () {
+      setDifficulty(difficultySelect.selectedIndex);
+    },
+    false
+  );
 
   timer = requestAnimationFrame(start);
 }
@@ -109,7 +136,28 @@ function collisionY() {
     return true;
   }
   if (ballTop > pHeight - 64) {
-    if (ballLeft >= paddleLeft && ballLeft <= paddleLeft + 64) {
+    // if (ballLeft >= paddleLeft && ballLeft <= paddleLeft + 64) {
+    //   return true;
+    // }
+    if (ballLeft >= paddleLeft + 16 && ballLeft < paddleLeft + 48) {
+      if (dx < 0) {
+        dx = -2;
+      } else {
+        dx = 2;
+      }
+      return true;
+    } else if (ballLeft >= paddleLeft && ballLeft < paddleLeft + 16) {
+      if (dx < 0) dx = -8;
+      else {
+        dx = 8;
+      }
+      return true;
+    } else if (ballLeft >= paddleLeft + 48 && ballLeft <= paddleLeft + 64) {
+      if (dx < 0) {
+        dx = -8;
+      } else {
+        dx = 8;
+      }
       return true;
     }
   }
@@ -130,4 +178,64 @@ function gameOver() {
   cancelAnimationFrame(timer);
   score.innerHTML += "     Game Over!";
   score.style.backgroundColor = "rgb(128, 0, 0)";
+}
+
+function mouseDown(e) {
+  drag = true;
+}
+
+function mouseUp(e) {
+  drag = false;
+}
+
+function mouseMove(e) {
+  if (drag) {
+    e.preventDefault();
+    paddleLeft = e.clientX - 32 || e.targetTouches[0].pageX - 32;
+    if (paddleLeft < 0) {
+      paddleLeft = 0;
+    }
+    if (paddleLeft > pWidth - 64) {
+      paddleLeft = pWidth - 64;
+    }
+    paddle.style.left = paddleLeft + "px";
+  }
+}
+
+function showSettings() {
+  controls.style.display = "block";
+  cancelAnimationFrame(timer);
+}
+
+function hideSettings() {
+  controls.style.display = "none";
+  timer = requestAnimationFrame(start);
+}
+
+function setDifficulty(diff) {
+  switch (diff) {
+    case 0:
+      dy = 2;
+      pdx = 48;
+      break;
+    case 1:
+      dy = 4;
+      pdx = 32;
+      break;
+    case 2:
+      dy = 6;
+      pdx = 16;
+      break;
+    default:
+      dy = 2;
+      pdx = 48;
+  }
+}
+
+function newGame() {
+  ballTop = 8;
+  currentScore = 0;
+  dx = 2;
+  setDifficulty(difficultySelect.selectedIndex);
+  score.style.backgroundColor = "rgb(32, 128, 64)";
 }

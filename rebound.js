@@ -198,7 +198,7 @@ function difficulty() {
 function gameOver() {
   cancelAnimationFrame(timer);
   score.innerHTML += "     Game Over!";
-  score.style.backgroundColor = "rgb(128, 0, 0)";
+  score.style.backgroundColor = "rgb(234, 137, 137)";
   playSound(beepGameOver);
 }
 
@@ -268,7 +268,7 @@ function initAudio() {
   beepY = new Audio("./sounds/beepY.mp3");
   beepPaddle = new Audio("./sounds/beepPaddle.mp3");
   beepGameOver = new Audio("./sounds/beepGameOver.mp3");
-  bgMusic = new Audio("./sounds/music.mp3");
+  bgMusic = new Audio("./sounds/darude-sandstorm.mp3");
   // turn off volume
   beepX.volume = 0;
   beepY.volume = 0;

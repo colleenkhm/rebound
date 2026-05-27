@@ -22,6 +22,7 @@ var paddleLeft = 228;
 var ballLeft = 100;
 var ballTop = 8;
 var drag = false;
+var isGameOver = false;
 
 var sndEnabled = false;
 var musicEnabled = false;
@@ -135,6 +136,9 @@ function detectCollisions() {
   }
   if (collisionY()) {
     dy *= -1;
+    if (ballTop > pHeight - 64) {
+      ballTop = pHeight - 65;
+    }
   }
 }
 
@@ -198,10 +202,12 @@ function difficulty() {
 }
 
 function gameOver() {
+  isGameOver = true;
   cancelAnimationFrame(timer);
   score.innerHTML += "     Game Over!";
   score.style.backgroundColor = "rgb(234, 137, 137)";
   playSound(beepGameOver);
+  showSettings();
 }
 
 function mouseDown(e) {
@@ -233,7 +239,9 @@ function showSettings() {
 
 function hideSettings() {
   controls.style.display = "none";
-  timer = requestAnimationFrame(start);
+  if (!isGameOver) {
+    timer = requestAnimationFrame(start);
+  }
 }
 
 function setDifficulty(diff) {
@@ -257,11 +265,14 @@ function setDifficulty(diff) {
 }
 
 function newGame() {
+  isGameOver = false;
   ballTop = 8;
   currentScore = 0;
   dx = 2;
   setDifficulty(difficultySelect.selectedIndex);
+  score.innerHTML = "Score: 0";
   score.style.backgroundColor = "rgb(32, 128, 64)";
+  hideSettings();
 }
 
 function initAudio() {

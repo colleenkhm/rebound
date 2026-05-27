@@ -115,7 +115,6 @@ function start() {
 
 function render() {
   moveBall();
-  updateScore();
 }
 
 function moveBall() {
@@ -126,7 +125,7 @@ function moveBall() {
 }
 
 function updateScore() {
-  currentScore += 5;
+  currentScore += 1;
   score.innerHTML = "Score: " + currentScore;
 }
 
@@ -163,6 +162,7 @@ function collisionY() {
       } else {
         dx = 2;
       }
+      updateScore();
       playSound(beepPaddle);
       return true;
     } else if (ballLeft >= paddleLeft && ballLeft < paddleLeft + 16) {
@@ -170,6 +170,7 @@ function collisionY() {
       else {
         dx = 8;
       }
+      updateScore();
       playSound(beepPaddle);
       return true;
     } else if (ballLeft >= paddleLeft + 48 && ballLeft <= paddleLeft + 64) {
@@ -178,6 +179,7 @@ function collisionY() {
       } else {
         dx = 8;
       }
+      updateScore();
       playSound(beepPaddle);
       return true;
     }

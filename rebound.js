@@ -188,7 +188,7 @@ function collisionY() {
 }
 
 function difficulty() {
-  if (currentScore % 1000 == 0) {
+  if (currentScore > 0 && currentScore % 1000 == 0) {
     if (dy > 0) {
       dy += 2;
     } else {
